@@ -10,9 +10,6 @@ RUN mvn -B -e -C -T 1C org.apache.maven.plugins:maven-dependency-plugin:3.0.2:go
 COPY . .
 RUN mvn -B -e -o -T 1C verify
 
-FROM openjdk:8-alpine as openjdkalpine
-COPY --from=maven /usr/src/app/target/*.war ./
-
 #Get jetty and copy over war file from previous build
 FROM jetty:jre8-alpine
-COPY --from=openjdkalpine /*.war /var/lib/jetty/webapps/ROOT.war
+COPY --from=maven /usr/src/app/target/*.war /var/lib/jetty/webapps/ROOT.war
